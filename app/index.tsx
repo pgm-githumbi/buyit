@@ -136,7 +136,7 @@ const OnBoarding = () => {
             <TouchableOpacity
               className="w-64 h-12 rounded-lg m-6 justify-center items-center bg-amber-400"
               onPress={() => {
-                router.push("/sign_up");
+                router.push("/(tabs)");
               }}
             >
               <Text className="text-lg font-bold">Continue with email</Text>
