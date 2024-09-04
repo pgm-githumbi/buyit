@@ -1,41 +1,15 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { Pressable } from "react-native";
 
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
+import { Text, View } from "@/components/Themed";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon({
-  label,
-  name,
-  ...props
-}: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-  focused: boolean;
-  label?: string;
-}) {
-  const fontWeight = props.focused ? "font-bold" : "font-thin";
-  return (
-    <View className="flex justify-around items-center">
-      <FontAwesome
-        size={28}
-        name={name}
-        style={{ marginBottom: -3 }}
-        {...props}
-      />
-      <Text
-        className={`text-xs ${fontWeight} my-1`}
-        style={{ color: props.color }}
-      >
-        {label?.normalize()}
-      </Text>
-    </View>
-  );
-}
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -46,8 +20,9 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, false),
-        tabBarShowLabel: false,
+        // headerShown: useClientOnlyValue(false, false),
+        headerShown: false,
+        tabBarShowLabel: true,
       }}
     >
       <Tabs.Screen
@@ -55,12 +30,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name="home"
-              label="Home"
-              color={color}
-              focused={focused}
-            />
+            <AntDesign name="home" color={color} size={20} />
           ),
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -83,7 +53,7 @@ export default function TabLayout() {
         options={{
           title: "Create",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name="code" focused={focused} color={color} />
+            <Ionicons name="create-outline" color={color} size={20} />
           ),
         }}
       />
@@ -92,12 +62,7 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name="user"
-              label="Profile"
-              focused={focused}
-              color={color}
-            />
+            <AntDesign name="user" color={color} size={20} />
           ),
         }}
       />
