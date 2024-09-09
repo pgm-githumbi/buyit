@@ -1,32 +1,63 @@
-import { Image, Pressable, ScrollView, StyleSheet } from "react-native";
-
-import EditScreenInfo from "@/components/EditScreenInfo";
-import { Text, View } from "@/components/Themed";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { Href, Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { DataTable } from "react-native-paper";
+import { FadeLoading } from "react-native-fade-loading";
+
 import { coinListApi } from "@/redux/coinListApi";
 import CoinListItem from "@/components/coins/CoinListItem";
-import { DataTable } from "react-native-paper";
 import PriceChange from "@/components/coins/PriceChange";
+import EditScreenInfo from "@/components/EditScreenInfo";
+import { Text, View } from "@/components/Themed";
 import { useTotalMarketCapValue } from "@/redux/marketApi";
 import { numberFormatter } from "@/utils";
 import MarketCapView from "@/components/coins/MarketCapView";
+import Loader from "@/components/Loader";
 
 export default function TabOneScreen() {
-  const { data: coins } = coinListApi.useGetAllQuery();
+  const { data: coins, isFetching, isLoading } = coinListApi.useGetAllQuery();
   const market = useTotalMarketCapValue();
   return (
-    <SafeAreaView className="w-full items-center justify-start">
-      <StatusBar style="auto" />
-      <ScrollView className="w-full gap-4">
-        <View className="flex w-64 hs-16 mr-4 p-3 border border-stone-700 mb-4 rounded-xl">
-          {market?.data && (
-            <>
-              <MarketCapView market={market.data} />
-            </>
-          )}
-        </View>
+    <SafeAreaView className="w-full items-center mt-2 justify-start">
+      <StatusBar style="auto" hidden />
+      <View className="flex w-64 hs-16 mr-4 p-3 border border-stone-700 mb-1 ml-1 self-start rounded-xl">
+        {market?.data && (
+          <>
+            <MarketCapView market={market.data} />
+          </>
+        )}
+        {market.isLoading ||
+          (market.isFetching && (
+            <View className="">
+              <FadeLoading
+                visible={false}
+                style={styles.marketInfoLoading}
+                primaryColor="slategrey"
+                secondaryColor="slategray"
+                duration={2000}
+                animated={false}
+                children={""}
+              />
+              <FadeLoading
+                visible={false}
+                style={styles.marketInfoLoading}
+                primaryColor="slategrey"
+                secondaryColor="slategray"
+                duration={2000}
+                animated={false}
+                children={""}
+              />
+            </View>
+          ))}
+      </View>
+      <Loader isFetching={isFetching} isLoading={isLoading}>
         <View className="w-full mr-4 pr-4">
           <ScrollView horizontal>
             <DataTable>
@@ -38,24 +69,23 @@ export default function TabOneScreen() {
                   <Text></Text>
                 </DataTable.Title>
                 <DataTable.Title>Coin</DataTable.Title>
-                {/* <DataTable.Title>
-                <Text />
-              </DataTable.Title> */}
                 <DataTable.Title numeric>Price</DataTable.Title>
                 <DataTable.Title numeric>24h</DataTable.Title>
                 <DataTable.Title numeric>Market cap</DataTable.Title>
                 <DataTable.Title numeric>Last 24h</DataTable.Title>
                 <DataTable.Title numeric>Last 7days</DataTable.Title>
               </DataTable.Header>
-              {coins?.slice(0, 5).map((coin, key) => (
-                <>
-                  <CoinListItem coin={coin} key={key} />
-                </>
-              ))}
+              <FlatList
+                data={coins?.slice(0, -2)}
+                renderItem={({ item, index }) => (
+                  <CoinListItem coin={item} key={index} />
+                )}
+                keyExtractor={({ id }) => id}
+              />
             </DataTable>
           </ScrollView>
         </View>
-      </ScrollView>
+      </Loader>
     </SafeAreaView>
   );
 }
@@ -74,5 +104,10 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: "80%",
+  },
+  marketInfoLoading: {
+    width: "100%",
+    height: 20,
+    marginVertical: 5,
   },
 });

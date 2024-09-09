@@ -13,8 +13,9 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/components/useColorScheme";
 import { coinListApi } from "@/redux/coinListApi";
 import { Provider } from "react-redux";
-import store from "@/redux/store";
+import store, { persistor } from "@/redux/store";
 import { PaperProvider } from "react-native-paper";
+import { PersistGate } from "redux-persist/integration/react";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -62,9 +63,11 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <PaperProvider>
-        <RootLayoutNav />
-      </PaperProvider>
+      <PersistGate persistor={persistor} loading={null}>
+        <PaperProvider>
+          <RootLayoutNav />
+        </PaperProvider>
+      </PersistGate>
     </Provider>
   );
 }
@@ -75,10 +78,13 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
-        {/* {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="coin/[coin]"
+          options={{ headerShown: false, presentation: "formSheet" }}
+        />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
       </Stack>
     </ThemeProvider>

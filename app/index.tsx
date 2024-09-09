@@ -79,47 +79,6 @@ const OnBoarding = () => {
             </View>
           </View>
 
-          {/* <View className="h-32">
-          <MaskedView
-            style={{ flex: 1, flexDirection: "row", height: "100%" }}
-            maskElement={
-              <View
-                style={{
-                  // Transparent background because mask is based off alpha channel.
-                  backgroundColor: "transparent",
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 60,
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Basic Mask
-                </Text>
-              </View>
-            }
-          >
-            <View
-              style={{ flex: 1, height: "100%", backgroundColor: "#324376" }}
-            />
-            <View
-              style={{ flex: 1, height: "100%", backgroundColor: "#F5DD90" }}
-            />
-            <View
-              style={{ flex: 1, height: "100%", backgroundColor: "#F76C5E" }}
-            />
-            <View
-              style={{ flex: 1, height: "100%", backgroundColor: "#e1e1e1" }}
-            />
-          </MaskedView>
-        </View> */}
-          {/* <View className="size-3 justify-centerr items-center"> */}
-          {/* </View> */}
           <Text className="text-3xl font-bold text-white text-center mt-7">
             Everything you want
             <Text>
@@ -128,8 +87,8 @@ const OnBoarding = () => {
             </Text>
           </Text>
           <Image
-            className="w-32 h-32 justify-center m-7"
-            source={require("../assets/images/logo1.png")}
+            className="w-64 h-32 rounded-lg justify-center m-7"
+            source={require("../assets/images/favicon.jpg")}
             resizeMode="contain"
           />
           <View className="w-full justify-center items-center h-80 px-4">

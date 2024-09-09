@@ -1,5 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { useMemo, useRef } from "react";
+import { REHYDRATE } from "redux-persist";
+import { RootState } from "./store";
+import { PayloadAction, Action } from "@reduxjs/toolkit";
 
 export interface HistoryResp {
   prices: [unix_timestamp: number, value: number][];
@@ -28,6 +31,11 @@ export const historicalApi = createApi({
       keepUnusedDataFor: 60 * 60, // 1 hour
     }),
   }),
+  extractRehydrationInfo({ type, payload }, { reducerPath }) {
+    if (type === REHYDRATE) {
+      return (payload as unknown as any)[reducerPath];
+    }
+  },
 });
 
 export const useHistoricalPrice = ({

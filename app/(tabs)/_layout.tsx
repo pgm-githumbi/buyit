@@ -28,10 +28,12 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Coins",
           tabBarIcon: ({ color, focused }) => (
             <AntDesign name="home" color={color} size={20} />
           ),
+          headerShown: true,
+          headerStyle: { borderBottomColor: "green" },
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -51,7 +53,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="two"
         options={{
-          title: "Create",
+          title: "Search",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name="create-outline" color={color} size={20} />
           ),
@@ -66,6 +68,7 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen name="search" options={{ title: "Auth" }} />
     </Tabs>
   );
 }
