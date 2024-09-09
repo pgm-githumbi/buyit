@@ -32,7 +32,7 @@ export const historicalApi = createApi({
     }),
   }),
   extractRehydrationInfo({ type, payload }, { reducerPath }) {
-    if (type === REHYDRATE) {
+    if (type === REHYDRATE && payload) {
       return (payload as unknown as any)[reducerPath];
     }
   },
