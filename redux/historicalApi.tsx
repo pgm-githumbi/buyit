@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { REHYDRATE } from "redux-persist";
-import { RootState } from "./store";
-import { PayloadAction, Action } from "@reduxjs/toolkit";
+import errorHoc from "./components/errorHoc";
+import loadingHoc from "./components/loadingHoc";
 
 export interface HistoryResp {
   prices: [unix_timestamp: number, value: number][];
@@ -38,13 +38,11 @@ export const historicalApi = createApi({
   },
 });
 
-export const useHistoricalPrice = ({
-  coin_id,
-  days,
-}: {
+type HookProps = {
   coin_id: string;
   days: number;
-}) => {
+};
+export const useHistoricalPrice = ({ coin_id, days }: HookProps) => {
   const query = historicalApi.useHistoricalDataQuery({ coin_id, days });
 
   const defaultResult: HistoryResp["prices"] = [
@@ -56,11 +54,16 @@ export const useHistoricalPrice = ({
   const result = query.data?.prices || defaultResult;
 
   return useMemo(
-    () =>
-      result.map((value) => ({
+    () => ({
+      ...query,
+      prices: result.map((value) => ({
         date: new Date(value[0]),
         value: value[1],
       })),
-    [query.data?.prices, query.data?.prices.length]
+    }),
+    [query.data?.prices, result, query.error]
   );
 };
+
+export const HistApiErrorWrapper = errorHoc<HistoryResp, HookProps>();
+export const HistApiLoadingWrapper = loadingHoc<HistoryResp, HookProps>();

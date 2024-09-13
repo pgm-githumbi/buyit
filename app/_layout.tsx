@@ -11,11 +11,13 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/useColorScheme";
-import { coinListApi } from "@/redux/coinListApi";
 import { Provider } from "react-redux";
 import store, { persistor } from "@/redux/store";
 import { PaperProvider } from "react-native-paper";
 import { PersistGate } from "redux-persist/integration/react";
+import { Text } from "@/components/Themed";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Ionicons } from "@expo/vector-icons";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -63,11 +65,13 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <PersistGate persistor={persistor} loading={null}>
-        <PaperProvider>
-          <RootLayoutNav />
-        </PaperProvider>
-      </PersistGate>
+      <GestureHandlerRootView>
+        <PersistGate persistor={persistor} loading={null}>
+          <PaperProvider>
+            <RootLayoutNav />
+          </PaperProvider>
+        </PersistGate>
+      </GestureHandlerRootView>
     </Provider>
   );
 }
@@ -86,6 +90,21 @@ function RootLayoutNav() {
           options={{ headerShown: false, presentation: "formSheet" }}
         />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+        <Stack.Screen
+          name="search/index"
+          options={{
+            // presentation: "modal",
+            headerSearchBarOptions: {
+              autoFocus: true,
+              onSearchButtonPress(e) {
+                console.log("search button pressed");
+              },
+            },
+            header(props) {
+              return <Text>Header blud</Text>;
+            },
+          }}
+        />
       </Stack>
     </ThemeProvider>
   );

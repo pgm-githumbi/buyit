@@ -1,29 +1,31 @@
 import {
   Dimensions,
   Image,
-  Platform,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
-import React from "react";
-import { Routes, useLocalSearchParams } from "expo-router";
-import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
+import { useLocalSearchParams } from "expo-router";
 import { Text, View } from "@/components/Themed";
-import PriceGraph from "@/components/coins/PriceGraph";
 import { Coin } from "@/redux/coinListApi";
 import { LineChart } from "react-native-chart-kit";
-import { useHistoricalPrice } from "@/redux/historicalApi";
+import {
+  HistApiErrorWrapper,
+  HistApiLoadingWrapper,
+  useHistoricalPrice,
+} from "@/redux/historicalApi";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PriceChange from "@/components/coins/PriceChange";
-import { Rect, Svg, Text as TextSVG } from "react-native-svg";
 import Tooltip from "@/components/coins/graph/Tooltip";
-import { currencyFormatter, formatTimeString, numberFormatter } from "@/utils";
+import { currencyFormatter, formatTimeString } from "@/utils";
 
 const CoinView = () => {
   const params = useLocalSearchParams();
-  const coinPrice = useHistoricalPrice({
+  const [days, setDays] = useState<number>(1);
+  const { prices: coinPrice, ...query } = useHistoricalPrice({
     coin_id: params.id as string,
-    days: 1,
+    days,
   });
   const coin = params as unknown as Coin;
   const labels = coinPrice
@@ -52,60 +54,78 @@ const CoinView = () => {
         </View>
         <View className="mr-2 mt-2 mb-8">
           <ScrollView>
-            <ScrollView horizontal>
-              <Tooltip>
-                {({ decorator, onDataPointClick }) => (
-                  <LineChart
-                    data={{
-                      labels,
-                      datasets: [
-                        {
-                          data: coinPrice.map(({ value: price }) => price),
-                        },
-                      ],
-                    }}
-                    width={Dimensions.get("window").width * 2} // from react-native
-                    height={620}
-                    yAxisLabel=""
-                    formatYLabel={(value) =>
-                      `$${currencyFormatter.format(Number(value))}`
-                    }
-                    decorator={() =>
-                      decorator({
-                        getXValue: (index: number) =>
-                          formatTimeString(coinPrice.at(index)?.date),
-                      })
-                    }
-                    yAxisInterval={1} // optional, defaults to 1
-                    chartConfig={{
-                      backgroundColor: "white",
-                      backgroundGradientFrom: "#000",
-                      backgroundGradientTo: "#a5d6a7",
-                      decimalPlaces: 0,
-                      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                      labelColor: (opacity = 1) => `gray`,
-                      style: {
-                        borderRadius: 16,
-                      },
-                      propsForDots: {
-                        r: "0",
-                        strokeWidth: "2",
-                        // stroke: "#ffa726",
-                      },
-                    }}
-                    bezier
-                    transparent
-                    withInnerLines={false}
-                    onDataPointClick={onDataPointClick}
-                    style={{
-                      marginVertical: 8,
-                      borderRadius: 16,
-                      paddingLeft: 8,
-                    }}
-                  />
-                )}
-              </Tooltip>
-            </ScrollView>
+            <View className="flex flex-col self">
+              <ScrollView horizontal>
+                <HistApiLoadingWrapper query={query}>
+                  <HistApiErrorWrapper query={query}>
+                    <Tooltip>
+                      {({ decorator, onDataPointClick }) => (
+                        <LineChart
+                          data={{
+                            labels,
+                            datasets: [
+                              {
+                                data: coinPrice.map(
+                                  ({ value: price }) => price
+                                ),
+                              },
+                            ],
+                          }}
+                          width={Dimensions.get("window").width * 2} // from react-native
+                          height={620}
+                          yAxisLabel=""
+                          formatYLabel={(value) =>
+                            `$${currencyFormatter.format(Number(value))}`
+                          }
+                          decorator={() =>
+                            decorator({
+                              getXValue: (index: number) =>
+                                formatTimeString(coinPrice.at(index)?.date),
+                            })
+                          }
+                          yAxisInterval={1} // optional, defaults to 1
+                          chartConfig={{
+                            backgroundColor: "white",
+                            backgroundGradientFrom: "#000",
+                            backgroundGradientTo: "#a5d6a7",
+                            decimalPlaces: 0,
+                            color: (opacity = 1) =>
+                              `rgba(255, 255, 255, ${opacity})`,
+                            labelColor: (opacity = 1) => `gray`,
+                            style: {
+                              borderRadius: 16,
+                            },
+                            propsForDots: {
+                              r: "0",
+                              strokeWidth: "2",
+                              // stroke: "#ffa726",
+                            },
+                          }}
+                          bezier
+                          transparent
+                          withInnerLines={false}
+                          onDataPointClick={onDataPointClick}
+                          style={{
+                            marginVertical: 8,
+                            borderRadius: 16,
+                            paddingLeft: 8,
+                          }}
+                        />
+                      )}
+                    </Tooltip>
+                  </HistApiErrorWrapper>
+                </HistApiLoadingWrapper>
+              </ScrollView>
+              <View className="flex flex-row justify-evenly bg-lime-200 justify-starkt content-end self-start w-72  mx-4 mb-16 rounded-lg">
+                {[1, 7, 14, 21].map((value, index) => (
+                  <TouchableOpacity key={index}>
+                    <Text className="bg-neutral-800 text-neutral-400 fjont-bold rounded-xl border border-white-200 px-4 py-1 text-xs">
+                      {value} d
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
           </ScrollView>
         </View>
       </View>

@@ -1,6 +1,10 @@
 import { StyleSheet } from "react-native";
 import React from "react";
-import { useHistoricalPrice } from "@/redux/historicalApi";
+import {
+  HistApiErrorWrapper,
+  HistApiLoadingWrapper,
+  useHistoricalPrice,
+} from "@/redux/historicalApi";
 import { Coin } from "@/redux/coinListApi";
 import { LineGraph } from "react-native-graph";
 import Colors from "@/constants/Colors";
@@ -25,27 +29,31 @@ const PriceGraph = ({
   color,
   className = "",
 }: Props) => {
-  const price = useHistoricalPrice({ coin_id: coin.id, days });
+  const { prices, ...query } = useHistoricalPrice({ coin_id: coin.id, days });
   const graphColor = coin.price_change_24h > 0 ? "#22bc09" : "#ef5350";
   return (
     <>
-      <LineGraph
-        style={{
-          alignSelf: "center",
-          width,
-          height,
-          aspectRatio,
-          marginVertical: 10,
-        }}
-        points={price.slice(-70, -1)}
-        animated={false}
-        className={`bkg-lime-100 ${className}`}
-        color={color || graphColor}
-        gradientFillColors={["#7476df5D", "#7476df4D", "#7476df00"]}
-        enableFadeInMask={true}
-      >
-        <Text className="text-2xl">Children</Text>
-      </LineGraph>
+      <HistApiErrorWrapper query={query}>
+        <HistApiLoadingWrapper query={query}>
+          <LineGraph
+            style={{
+              alignSelf: "center",
+              width,
+              height,
+              aspectRatio,
+              marginVertical: 10,
+            }}
+            points={prices.slice(-70, -1)}
+            animated={false}
+            className={`bkg-lime-100 ${className}`}
+            color={color || graphColor}
+            gradientFillColors={["#7476df5D", "#7476df4D", "#7476df00"]}
+            enableFadeInMask={true}
+          >
+            <Text className="text-2xl">Children</Text>
+          </LineGraph>
+        </HistApiLoadingWrapper>
+      </HistApiErrorWrapper>
     </>
   );
 };

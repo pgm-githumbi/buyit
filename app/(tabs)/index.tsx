@@ -11,7 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { DataTable } from "react-native-paper";
 import { FadeLoading } from "react-native-fade-loading";
 
-import { coinListApi } from "@/redux/coinListApi";
+import { coinListApi, CoinListLoading } from "@/redux/coinListApi";
 import CoinListItem from "@/components/coins/CoinListItem";
 import PriceChange from "@/components/coins/PriceChange";
 import EditScreenInfo from "@/components/EditScreenInfo";
@@ -22,42 +22,58 @@ import MarketCapView from "@/components/coins/MarketCapView";
 import Loader from "@/components/Loader";
 
 export default function TabOneScreen() {
-  const { data: coins, isFetching, isLoading } = coinListApi.useGetAllQuery();
+  const query = coinListApi.useGetAllQuery();
+  const { isFetching, isLoading, data: coins } = query;
+  console.log(
+    "useGetAllQuery: ",
+    coins?.length,
+    " isFetching:",
+    isFetching,
+    " isLoading:",
+    isLoading
+  );
   const market = useTotalMarketCapValue();
+  console.log(
+    "useTotalMarketCapValue: ",
+    { ...market, data: {}, currentData: {} },
+    " isFetching:",
+    market.isFetching,
+    " isLoading:",
+    market.isLoading
+  );
   return (
     <SafeAreaView className="w-full items-center mt-2 justify-start">
       <StatusBar style="auto" hidden />
       <View className="flex w-64 hs-16 mr-4 p-3 border border-stone-700 mb-1 ml-1 self-start rounded-xl">
-        {market?.data && (
+        {!market?.isLoading && (
           <>
             <MarketCapView market={market.data} />
           </>
         )}
-        {market.isLoading ||
-          (market.isFetching && (
-            <View className="">
-              <FadeLoading
-                visible={false}
-                style={styles.marketInfoLoading}
-                primaryColor="slategrey"
-                secondaryColor="slategray"
-                duration={2000}
-                animated={false}
-                children={""}
-              />
-              <FadeLoading
-                visible={false}
-                style={styles.marketInfoLoading}
-                primaryColor="slategrey"
-                secondaryColor="slategray"
-                duration={2000}
-                animated={false}
-                children={""}
-              />
-            </View>
-          ))}
+        {market.isLoading && (
+          <View className="">
+            <FadeLoading
+              visible={false}
+              style={styles.marketInfoLoading}
+              primaryColor="slategrey"
+              secondaryColor="slategray"
+              duration={2000}
+              animated={false}
+              children={""}
+            />
+            <FadeLoading
+              visible={false}
+              style={styles.marketInfoLoading}
+              primaryColor="slategrey"
+              secondaryColor="slategray"
+              duration={2000}
+              animated={false}
+              children={""}
+            />
+          </View>
+        )}
       </View>
-      <Loader isFetching={isFetching} isLoading={isLoading}>
+      <CoinListLoading query={query}>
         <View className="w-full mr-4 pr-4">
           <ScrollView horizontal>
             <DataTable>
@@ -76,7 +92,7 @@ export default function TabOneScreen() {
                 <DataTable.Title numeric>Last 7days</DataTable.Title>
               </DataTable.Header>
               <FlatList
-                data={coins?.slice(0, -2)}
+                data={coins?.slice(0, 5)}
                 renderItem={({ item, index }) => (
                   <CoinListItem coin={item} key={index} />
                 )}
@@ -85,7 +101,7 @@ export default function TabOneScreen() {
             </DataTable>
           </ScrollView>
         </View>
-      </Loader>
+      </CoinListLoading>
     </SafeAreaView>
   );
 }

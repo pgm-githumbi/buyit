@@ -4,7 +4,6 @@ import { Text, TextProps, View } from "../Themed";
 import { numberFormatter } from "@/utils";
 import { Market } from "@/redux/marketApi";
 import { LineGraph } from "react-native-graph";
-import { historicalApi, useHistoricalPrice } from "@/redux/historicalApi";
 import PriceChange from "./PriceChange";
 type Props = {
   market?:

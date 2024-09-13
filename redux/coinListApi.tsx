@@ -1,4 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import loadingHoc from "./components/loadingHoc";
+import errorHoc from "./components/errorHoc";
+import { FadeLoading } from "react-native-fade-loading";
+import { StyleSheet } from "react-native";
 
 export interface Coin {
   id: string;
@@ -29,3 +33,25 @@ export const coinListApi = createApi({
     }),
   }),
 });
+
+const styles = StyleSheet.create({
+  box: { width: "90%", height: 3, marginVertical: 5 },
+});
+
+export const CoinListLoading = loadingHoc<Coin[], void>(
+  <>
+    {Array.from(Array(10).keys()).map((index) => (
+      <FadeLoading
+        key={index}
+        visible={false}
+        style={styles.box}
+        primaryColor="slategrey"
+        secondaryColor="slategray"
+        duration={5000}
+        animated
+        children={""}
+      />
+    ))}
+  </>
+);
+export const CoinListError = errorHoc<Coin[], void>();

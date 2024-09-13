@@ -3,8 +3,18 @@ import { coinListApi } from "./coinListApi";
 import { marketApi } from "./marketApi";
 import { historicalApi } from "./historicalApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { persistCombineReducers, persistReducer } from "redux-persist";
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistCombineReducers,
+  persistReducer,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from "redux-persist";
 import { persistStore } from "redux-persist";
+import { searchApi } from "./searchApi";
 
 const persistConfig = {
   key: "root",
@@ -14,14 +24,23 @@ const reducer = persistCombineReducers(persistConfig, {
   [coinListApi.reducerPath]: coinListApi.reducer,
   [marketApi.reducerPath]: marketApi.reducer,
   [historicalApi.reducerPath]: historicalApi.reducer,
+  [searchApi.reducerPath]: searchApi.reducer,
 });
 const store = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false })
+    getDefaultMiddleware({
+      serializableCheck: {
+        warnAfter: 100028,
+
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+      immutableCheck: false,
+    })
       .concat(coinListApi.middleware)
       .concat(marketApi.middleware)
-      .concat(historicalApi.middleware),
+      .concat(historicalApi.middleware)
+      .concat(searchApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

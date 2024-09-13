@@ -1,13 +1,13 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
+import { Href, Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
 
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { Text, View } from "@/components/Themed";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 
@@ -35,11 +35,11 @@ export default function TabLayout() {
           headerShown: true,
           headerStyle: { borderBottomColor: "green" },
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link href={"/search" as Href} asChild>
               <Pressable>
                 {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
+                  <FontAwesome5
+                    name="search"
                     size={25}
                     color={Colors[colorScheme ?? "light"].text}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
@@ -68,7 +68,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen name="search" options={{ title: "Auth" }} />
+      {/* <Tabs.Screen name="search" options={{ title: "Auth" }} /> */}
     </Tabs>
   );
 }

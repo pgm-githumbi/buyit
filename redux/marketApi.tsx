@@ -1,6 +1,12 @@
 import { addValues } from "@/utils";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { useMemo } from "react";
+import { ApiReturnCaseHandlerProps } from "./apiTypes";
+import { Text } from "@/components/Themed";
+import loadingHoc from "./components/loadingHoc";
+import errorHoc from "./components/errorHoc";
+import { FadeLoading } from "react-native-fade-loading";
+import { StyleSheet } from "react-native";
 
 export interface Market {
   data: {
@@ -39,8 +45,6 @@ export const marketApi = createApi({
 export const useTotalMarketCapValue = () => {
   const queryRes = marketApi.useTotalMarketCapQuery();
 
-  //   if (!queryRes?.data) return queryRes;
-
   const { crypto_24h_vol, crypto_mrkt_cap } = useMemo(() => {
     if (queryRes?.data) {
       const crypto_mrkt_cap = addValues(queryRes.data?.data.total_market_cap);
@@ -53,17 +57,6 @@ export const useTotalMarketCapValue = () => {
     queryRes?.data?.data.total_market_cap,
     queryRes?.data?.data.total_volume,
   ]);
-  //   if (queryRes?.data) {
-  //     const crypto_mrkt_cap = addValues(queryRes.data?.data.total_market_cap);
-  //     const crypto_24h_vol = addValues(queryRes.data?.data.total_volume);
-
-  //     return {
-  //       ...queryRes,
-  //       data: {
-  //         data: { ...queryRes?.data.data, crypto_mrkt_cap, crypto_24h_vol },
-  //       },
-  //     };
-  //   }
 
   return {
     ...queryRes,
@@ -76,3 +69,22 @@ export const useTotalMarketCapValue = () => {
     },
   };
 };
+
+const styles = StyleSheet.create({
+  box: { width: "90%", height: 20, marginVertical: 5 },
+});
+
+export const LoadingWrapper = loadingHoc<Market, null>(
+  <>
+    <FadeLoading
+      visible={false}
+      style={styles.box}
+      primaryColor="slategrey"
+      secondaryColor="slategray"
+      duration={1000}
+      animated
+      children={""}
+    />
+  </>
+);
+export const ErrorWrapper = errorHoc<Market, null>();
