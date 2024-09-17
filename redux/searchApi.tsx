@@ -13,8 +13,6 @@ export interface CoinsSearchResult {
   thumb: string;
   large: string;
 }
-export interface CoinsSearchResults extends Array<CoinsSearchResult> {}
-
 export interface ExchangesSearchResult {
   id: string;
   name: string;
@@ -22,22 +20,29 @@ export interface ExchangesSearchResult {
   thumb: string;
   large: string;
 }
-export interface ExchangesSearchResults extends Array<ExchangesSearchResult> {}
-
 export interface IcoSearchResult {
   categories: { id: number; name: string };
 }
-export interface IcoSearchResults extends Array<IcoSearchResult> {}
-
 export interface NftSearchResult {
   id: number;
   name: string;
   symbol: string;
   thumb: string;
 }
+export interface CategoriesSearchResult {
+  id: number;
+  name: string;
+}
+
+export interface CoinsSearchResults extends Array<CoinsSearchResult> {}
+export interface ExchangesSearchResults extends Array<ExchangesSearchResult> {}
+export interface IcoSearchResults extends Array<IcoSearchResult> {}
 export interface NftSearchResults extends Array<NftSearchResult> {}
+export interface CategoriesSearchResults
+  extends Array<CategoriesSearchResult> {}
 
 export interface SearchResults {
+  categories: CategoriesSearchResults;
   coins: CoinsSearchResults;
   exchanges: ExchangesSearchResults;
   icos: IcoSearchResults;
@@ -59,6 +64,7 @@ export const searchApi = createApi({
       transformResponse(baseQueryReturnValue: SearchResults, meta, arg) {
         return baseQueryReturnValue;
       },
+      keepUnusedDataFor: 60 * 60 * 60, //60 hrs
     }),
   }),
 });

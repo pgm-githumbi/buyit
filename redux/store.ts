@@ -15,6 +15,7 @@ import {
 } from "redux-persist";
 import { persistStore } from "redux-persist";
 import { searchApi } from "./searchApi";
+import { coinApi } from "./coinApi";
 
 const persistConfig = {
   key: "root",
@@ -25,6 +26,7 @@ const reducer = persistCombineReducers(persistConfig, {
   [marketApi.reducerPath]: marketApi.reducer,
   [historicalApi.reducerPath]: historicalApi.reducer,
   [searchApi.reducerPath]: searchApi.reducer,
+  [coinApi.reducerPath]: coinApi.reducer,
 });
 const store = configureStore({
   reducer,
@@ -40,7 +42,8 @@ const store = configureStore({
       .concat(coinListApi.middleware)
       .concat(marketApi.middleware)
       .concat(historicalApi.middleware)
-      .concat(searchApi.middleware),
+      .concat(searchApi.middleware)
+      .concat(coinApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

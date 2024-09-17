@@ -19,7 +19,7 @@ export interface Coin {
 }
 
 export const coinListApi = createApi({
-  reducerPath: "coinApi",
+  reducerPath: "coinListApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://api.coingecko.com/api/v3/coins/markets",
   }),

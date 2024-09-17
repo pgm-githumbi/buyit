@@ -9,6 +9,10 @@ export interface HistoryResp {
   market_caps: [unix_timestamp: Number, value: number][];
   total_volumes: [unix_timestamp: number, value: number][];
 }
+type HookProps = {
+  coin_id: string;
+  days: number;
+};
 export const historicalApi = createApi({
   reducerPath: "historicalApi",
   baseQuery: fetchBaseQuery({
@@ -16,10 +20,7 @@ export const historicalApi = createApi({
   }),
   tagTypes: ["historical"],
   endpoints: (builder) => ({
-    historicalData: builder.query<
-      HistoryResp,
-      { coin_id: string; days: number }
-    >({
+    historicalData: builder.query<HistoryResp, HookProps>({
       query({ coin_id, days }) {
         return `${coin_id}/market_chart?vs_currency=usd&days=${days}`;
       },
@@ -38,10 +39,6 @@ export const historicalApi = createApi({
   },
 });
 
-type HookProps = {
-  coin_id: string;
-  days: number;
-};
 export const useHistoricalPrice = ({ coin_id, days }: HookProps) => {
   const query = historicalApi.useHistoricalDataQuery({ coin_id, days });
 
