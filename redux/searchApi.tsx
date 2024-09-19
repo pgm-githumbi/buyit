@@ -1,8 +1,14 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {
+  createApi,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+  QueryStatus,
+} from "@reduxjs/toolkit/query/react";
 import loadingHoc from "./components/loadingHoc";
 import errorHoc from "./components/errorHoc";
 import { FadeLoading } from "react-native-fade-loading";
 import { StyleSheet } from "react-native";
+import { SerializedError } from "@reduxjs/toolkit";
 
 export interface CoinsSearchResult {
   id: string;
@@ -75,3 +81,86 @@ const styles = StyleSheet.create({
 
 export const searchApiLoadingWrapper = loadingHoc<SearchResults, string>();
 export const searchApiErrorWrapper = errorHoc<SearchResults, string>();
+
+export type SearchApiResult =
+  | {
+      error: undefined;
+      data: undefined;
+      fulfilledTimeStamp: undefined;
+      originalArgs: undefined;
+      requestId: undefined;
+      endpointName: string | undefined;
+      startedTimeStamp: undefined;
+      currentData: SearchResults | undefined;
+      isLoading: false;
+      isFetching: false;
+      isSuccess: false;
+      isError: false;
+      isUninitialized: true;
+      status: QueryStatus;
+    }
+  | {
+      error: FetchBaseQueryError | SerializedError | undefined;
+      fulfilledTimeStamp: number | undefined;
+      originalArgs: string | undefined;
+      requestId: string | undefined;
+      endpointName: string | undefined;
+      startedTimeStamp: number | undefined;
+
+      currentData: SearchResults | undefined;
+      isUninitialized: false;
+      isSuccess: false;
+      isError: false;
+      isLoading: true;
+      isFetching: boolean;
+      data: undefined;
+      status: QueryStatus;
+    }
+  | {
+      originalArgs: string | undefined;
+      requestId: string | undefined;
+      endpointName: string | undefined;
+      startedTimeStamp: number | undefined;
+      currentData: SearchResults | undefined;
+      isUninitialized: false;
+      isLoading: false;
+      isError: false;
+      isSuccess: true;
+      isFetching: true;
+      error: undefined;
+      data: SearchResults;
+      fulfilledTimeStamp: number;
+      status: QueryStatus;
+    }
+  | {
+      originalArgs: string | undefined;
+      requestId: string | undefined;
+      endpointName: string | undefined;
+      startedTimeStamp: number | undefined;
+      isUninitialized: false;
+      isLoading: false;
+      isError: false;
+      isSuccess: true;
+      isFetching: false;
+      error: undefined;
+      data: SearchResults;
+      fulfilledTimeStamp: number;
+      currentData: SearchResults;
+      status: QueryStatus;
+    }
+  | {
+      data: SearchResults | undefined;
+      fulfilledTimeStamp: number | undefined;
+      originalArgs: string | undefined;
+      requestId: string | undefined;
+      endpointName: string | undefined;
+      startedTimeStamp: number | undefined;
+      status: QueryStatus;
+      currentData: SearchResults | undefined;
+      isUninitialized: false;
+      isLoading: false;
+      isFetching: false;
+      isSuccess: false;
+      isError: true;
+      error: FetchBaseQueryError | SerializedError;
+    };

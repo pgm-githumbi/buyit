@@ -21,9 +21,42 @@ import {
   IcoSearchResult,
   NftSearchResult,
   searchApi,
+  SearchResults,
 } from "@/redux/searchApi";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { CoinError, CoinLoading } from "@/redux/coinApi";
+import AppChip from "@/components/features/search/chipView/AppChip";
+import CoinTitle from "@/components/features/search/searchBlocks/coin/CoinTitle";
+import CoinContent from "@/components/features/search/searchBlocks/coin/CoinContent";
+import ExchangeTitle from "@/components/features/search/searchBlocks/exchange/ExchangeTitle";
+import ExchangeContent from "@/components/features/search/searchBlocks/exchange/ExchangeContent";
+import IcoTitle from "@/components/features/search/searchBlocks/ico/IcoTitle";
+import IcoContent from "@/components/features/search/searchBlocks/ico/IcoContent";
+import NftTitle from "@/components/features/search/searchBlocks/nft/NftTitle";
+import NftContent from "@/components/features/search/searchBlocks/nft/NftContent";
+import ChipSet from "@/components/features/search/chipView/ChipSet";
+
+type GroupChip = (args: {
+  handleSelectedChanged: (chipName: string) => void;
+  selectedChips: string[];
+}) => React.ReactNode;
+
+type RenderSearchDataGroup<ResultType> = {
+  name: keyof SearchResults;
+  title: (dataItem: ResultType) => React.ReactNode;
+  content: (dataItem: ResultType) => React.ReactNode;
+  handlePress: (dataItem: ResultType) => void;
+  chip: GroupChip;
+  data?: ResultType[];
+};
+
+type SearchDataListNames = { name: keyof SearchResults }[];
+
+type SearchDataList = (
+  | RenderSearchDataGroup<CoinsSearchResult>
+  | RenderSearchDataGroup<ExchangesSearchResult>
+  | RenderSearchDataGroup<IcoSearchResult>
+  | RenderSearchDataGroup<NftSearchResult>
+)[];
 
 const Search = () => {
   const [value, setValue] = useState("");
@@ -37,181 +70,79 @@ const Search = () => {
     [trigger, value],
   );
 
-  useMemo(() => {
-    // console.log("result.data ", result.data?.coins);
-  }, [result.isLoading, result.isFetching, result.isSuccess, result.isError]);
+  let renderData = useMemo(
+    () => [
+      {
+        name: "coins" as keyof SearchResults,
+        title: (coinSearchRes: CoinsSearchResult) => (
+          <CoinTitle {...coinSearchRes} />
+        ),
+        content: (coinSearchRes: CoinsSearchResult) => (
+          <CoinContent coin={coinSearchRes} />
+        ),
+        handlePress: ({ id: coin_id }: CoinsSearchResult) =>
+          router.push(`/coin/${coin_id}`),
+        data: result.data?.coins,
+      },
+      {
+        name: "exchanges" as keyof SearchResults,
+        title: (exchSearchRes: ExchangesSearchResult) => (
+          <ExchangeTitle {...exchSearchRes} />
+        ),
+        content: (exchSearchRes: ExchangesSearchResult) => (
+          <ExchangeContent {...exchSearchRes} />
+        ),
 
-  const coinTitle = (coin: CoinsSearchResult) => (
-    <Card.Title
-      title={coin.name}
-      subtitle={coin.symbol}
-      left={(props) => (
-        <Avatar.Image
-          {...props}
-          source={{
-            uri: coin.thumb,
-          }}
-        />
-      )}
-    />
+        handlePress: ({ id: exchange_id }: ExchangesSearchResult) =>
+          router.push(`/view/exchange/${exchange_id}` as Href),
+
+        data: result.data?.exchanges,
+      },
+      {
+        name: "icos" as keyof SearchResults,
+        title: (icoSearchRes: IcoSearchResult) => (
+          <IcoTitle categories={icoSearchRes.categories} />
+        ),
+        content: (icoSearchRes: IcoSearchResult) => <IcoContent />,
+        handlePress: (ico: IcoSearchResult) =>
+          router.push(`/view/ico/${ico.categories.id}` as Href),
+
+        data: result.data?.icos,
+      },
+      {
+        name: "nfts" as keyof SearchResults,
+        title: (nftSearchRes: NftSearchResult) => (
+          <NftTitle {...nftSearchRes} />
+        ),
+        content: (nftSearchRes: NftSearchResult) => (
+          <NftContent {...nftSearchRes} />
+        ),
+        handlePress: (nft: NftSearchResult) =>
+          router.push(`/view/nft/${nft.id}` as Href),
+
+        data: result.data?.nfts,
+      },
+    ],
+    [
+      result.data?.coins,
+      result.data?.exchanges,
+      result.data?.icos,
+      result.data?.nfts,
+    ],
   );
 
-  const exchangeTitle = (exchange: ExchangesSearchResult) => (
-    <Card.Title
-      title={exchange.name}
-      subtitle="exchange"
-      left={(props) => (
-        <Avatar.Image
-          {...props}
-          source={{
-            uri: exchange.thumb,
-          }}
-        />
-      )}
-    />
-  );
+  const [itemTypesToRender, setitemTypesToRender] = useState<
+    (keyof SearchResults)[]
+  >(["coins", "exchanges", "icos", "nfts"]);
 
-  const icoTitle = (ico: IcoSearchResult) => (
-    <Card.Title
-      title={ico.categories.name}
-      subtitle="ico"
-      left={(props) => <Avatar.Icon {...props} icon={"hand-coin-outline"} />}
-    />
+  const reducedRenderData = useMemo(
+    () => renderData.filter((data) => itemTypesToRender.includes(data.name)),
+    [itemTypesToRender, renderData],
   );
-  const nftTitle = (nft: NftSearchResult) => (
-    <Card.Title
-      title={nft.name}
-      subtitle={nft.symbol}
-      left={(props) => <Avatar.Image {...props} source={{ uri: nft.thumb }} />}
-    />
+  useMemo(
+    () => console.log("reducedItemTypesToRender", itemTypesToRender),
+    [itemTypesToRender],
   );
-
-  //-------------------------------------------------------------------------------
-  const coinContent = (coin: CoinsSearchResult) => {
-    return (
-      <Card.Content>
-        <Text className="text-neutral-400">Rank: {coin.market_cap_rank}</Text>
-      </Card.Content>
-    );
-  };
-
-  const exchangeContent = (exchange: ExchangesSearchResult) => {
-    return (
-      <Card.Content>
-        <Text>Market type: {exchange.market_type}</Text>
-      </Card.Content>
-    );
-  };
-
-  const icoContent = (ico: IcoSearchResult) => (
-    <Card.Content>
-      <Text className="text-neutral-400">ico</Text>
-    </Card.Content>
-  );
-  const nftContent = (nft: NftSearchResult) => (
-    <Card.Content>
-      <Text className="text-neutral-400">nft: {nft.symbol}</Text>
-    </Card.Content>
-  );
-  const data = [
-    {
-      title: coinTitle,
-      content: coinContent,
-      handlePress: ({ id: coin_id }: CoinsSearchResult) =>
-        router.push(`/coin/${coin_id}`),
-      chip: () => (
-        <Chip
-          // icon="hand-coin-outline"
-          icon={() => (
-            <Badge style={{ borderRadius: 5 }} className={"bg-purple-200/70"}>
-              {result.data?.coins.length}
-            </Badge>
-          )}
-          className="w-fit"
-          onPress={() => console.log("Pressed")}
-          style={{ width: "auto" }}
-        >
-          <>
-            <Text className="mr-4">Coins </Text>
-          </>
-        </Chip>
-      ),
-      data: result.data?.coins,
-    },
-    {
-      title: exchangeTitle,
-      content: exchangeContent,
-      handlePress: ({ id: exchange_id }: ExchangesSearchResult) =>
-        router.push(`/view/exchange/${exchange_id}` as Href),
-      chip: () => (
-        <Chip
-          // icon="hand-coin-outline"
-          icon={() => (
-            <Badge style={{ borderRadius: 5 }} className={"bg-purple-200/70"}>
-              {result.data?.exchanges.length}
-            </Badge>
-          )}
-          className="w-fit"
-          onPress={() => console.log("Pressed")}
-          style={{ width: "auto" }}
-        >
-          <>
-            <Text className="mr-4">Exchanges </Text>
-          </>
-        </Chip>
-      ),
-      data: result.data?.exchanges,
-    },
-    {
-      title: icoTitle,
-      content: icoContent,
-      handlePress: (ico: IcoSearchResult) =>
-        router.push(`/view/ico/${ico.categories.id}` as Href),
-      chip: () => (
-        <Chip
-          // icon="hand-coin-outline"
-          icon={() => (
-            <Badge style={{ borderRadius: 5 }} className={"bg-purple-200/70"}>
-              {result.data?.icos.length}
-            </Badge>
-          )}
-          className="w-fit"
-          onPress={() => console.log("Pressed")}
-          style={{ width: "auto" }}
-        >
-          <>
-            <Text className="mr-4">Icos </Text>
-          </>
-        </Chip>
-      ),
-      data: result.data?.icos,
-    },
-    {
-      title: nftTitle,
-      content: nftContent,
-      handlePress: (nft: NftSearchResult) =>
-        router.push(`/view/nft/${nft.id}` as Href),
-      chip: () => (
-        <Chip
-          // icon="hand-coin-outline"
-          icon={() => (
-            <Badge style={{ borderRadius: 5 }} className={"bg-purple-200/70"}>
-              {result.data?.nfts.length}
-            </Badge>
-          )}
-          className="w-fit"
-          onPress={() => console.log("Pressed")}
-          style={{ width: "auto" }}
-        >
-          <>
-            <Text className="mr-4">Nfts </Text>
-          </>
-        </Chip>
-      ),
-      data: result.data?.nfts,
-    },
-    // renderCategories: {title: exchangeTitle, data: result.data?.Ico},
-  ];
 
   return (
     <View>
@@ -220,33 +151,44 @@ const Search = () => {
         onEnter={handleEnter}
         onChangeText={(text) => setValue((_) => text)}
       />
-      <View className="mt-4 flex flex-row flex-wrap">
-        {result.isSuccess &&
-          data?.map((itemGroup, index) => (
-            <View key={index} className="mb-0.5 mr-2 mt-1">
-              {itemGroup.chip()}
-            </View>
-          ))}
-      </View>
+      {result.isSuccess && (
+        <ChipSet
+          chipNames={renderData.map((renderItem) => renderItem.name)}
+          searchQueryResult={result.data}
+          selectedChips={itemTypesToRender}
+          handleChipSelect={(itemType) =>
+            setitemTypesToRender((prev) => {
+              if (!prev.includes(itemType)) return [itemType, ...prev];
+
+              return prev.filter((item) => item !== itemType);
+            })
+          }
+        />
+      )}
+      {result.isSuccess && reducedRenderData.length === 0 && (
+        <View className="bg-lime-200">
+          <Text>No results meet the search criteria</Text>
+        </View>
+      )}
       <ScrollView>
         {result.isSuccess &&
-          data?.map((itemGroup, groupIndex) =>
-            itemGroup.data?.map((item, index) => (
+          reducedRenderData?.map((renderItem, groupIndex) =>
+            renderItem.data?.map((item, index) => (
               <TouchableOpacity
                 onPress={
                   //@ts-expect-error
-                  () => itemGroup.handlePress(item)
+                  () => renderItem.handlePress(item)
                 }
               >
                 <Card key={index} className="mb-2 mt-2">
                   {
                     //@ts-expect-error
-                    itemGroup.title(item)
+                    renderItem.title(item)
                   }
 
                   {
                     //@ts-expect-error
-                    itemGroup.content(item)
+                    renderItem.content(item)
                   }
                 </Card>
               </TouchableOpacity>
