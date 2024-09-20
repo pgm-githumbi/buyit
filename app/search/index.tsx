@@ -5,14 +5,7 @@ import {
 } from "react-native";
 import React, { useCallback, useMemo, useState } from "react";
 import { View, Text } from "@/components/Themed";
-import {
-  Button,
-  Card,
-  Text as TextPaper,
-  Avatar,
-  Chip,
-  Badge,
-} from "react-native-paper";
+import { Card } from "react-native-paper";
 import { Href, router } from "expo-router";
 import SearchBar from "@/components/features/search/SearchBar";
 import {
@@ -24,7 +17,6 @@ import {
   SearchResults,
 } from "@/redux/searchApi";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import AppChip from "@/components/features/search/chipView/AppChip";
 import CoinTitle from "@/components/features/search/searchBlocks/coin/CoinTitle";
 import CoinContent from "@/components/features/search/searchBlocks/coin/CoinContent";
 import ExchangeTitle from "@/components/features/search/searchBlocks/exchange/ExchangeTitle";

@@ -26,9 +26,19 @@
       "output": "static",
       "favicon": "./assets/images/favicon.jpg"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router"
+    ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "391f5497-9260-493a-a234-06b97137cd3d"
+      }
     }
   }
 }

@@ -28,11 +28,11 @@ const FormInput = ({
 }: FormInputProps) => {
   const [showPass, setShowPass] = useState<boolean>(false);
   return (
-    <View className=" my-3">
-      <Text className="text-md font-pregular font-medium pl-2 mb-2">
+    <View className="my-3">
+      <Text className="text-md font-pregular mb-2 pl-2 font-medium text-neutral-400">
         {label}:
       </Text>
-      <View className="flex flex-row border-2 border-gray-900 focus:border-indigo-200 rounded-2xl justify-center justify-between items-center w-full h-16">
+      <View className="flex h-16 w-full flex-row items-center justify-center justify-between rounded-2xl border-2 border-neutral-900 focus:border-neutral-600">
         <TextInput
           className="mx-4"
           value={value}
@@ -41,6 +41,7 @@ const FormInput = ({
           placeholderTextColor={"gray"}
           style={{ color: "white" }}
           secureTextEntry={label === "Password" && showPass === false}
+          onPressIn={() => console.log("pes")}
         />
         {(label === "Password" && showPass === false && (
           <Ionicons
@@ -48,7 +49,7 @@ const FormInput = ({
             onPress={() => setShowPass(!showPass)}
             name="eye"
             size={32}
-            color={"indigo"}
+            color={"dimgray"}
           />
         )) ||
           (showPass && (
@@ -57,7 +58,7 @@ const FormInput = ({
               onPress={() => setShowPass(!showPass)}
               name="eye-slash"
               size={24}
-              color={"indigo"}
+              color={"dimgray"}
             />
           ))}
       </View>

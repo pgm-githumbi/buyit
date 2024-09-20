@@ -17,22 +17,24 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const submit = () => {};
   return (
-    <SafeAreaView className=" justify-center">
-      <ScrollView className="flex flex-col w-full h-full justify-items-center content-start">
+    <SafeAreaView className="justify-center">
+      <ScrollView className="flex h-full w-full flex-col content-start justify-items-center">
         <View className="flex flex-row items-center">
           <Image
-            source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/3737/3737151.png",
-            }}
-            className="w-32 h-24 m-4 justify-self-start "
+            // source={{
+            //   uri: "https://cdn-icons-png.flaticon.com/512/3737/3737151.png",
+            // }}
+
+            source={require("../../assets/images/digiChums 4by3-black-bg.jpg")}
+            className="m-4 h-24 w-32 justify-self-start"
             resizeMode="contain"
           />
-          <MonoText className="text-3xl font-pregular no-italic text-indigo-200 font-extrabold">
-            BUY IT
+          <MonoText className="font-pregular no-italic font-extrabold text-yellow-500 text-3xl">
+            digi chums
           </MonoText>
         </View>
         <View className="m-8">
-          <Text className="text-2xl mb-3 font-pregular font-semibold ">
+          <Text className="font-pregular mb-3 font-semibold text-neutral-300 text-2xl">
             Create an account
           </Text>
 
@@ -48,18 +50,18 @@ const SignUp = () => {
           />
           <TouchableOpacity
             onPress={submit}
-            className={`border-2 mt-16 rounded-2xl h-12 justify-center items-center border-pink-200`}
+            className={`border-yellofw-200 mt-16 h-12 items-center justify-center rounded-2xl border-2 bg-neutral-900`}
           >
-            <Text className="btn font-pregular font-semibold text-md text-accent ">
+            <Text className="btn font-pregular text-md text-accent font-semibold text-neutral-300">
               Submit
             </Text>
           </TouchableOpacity>
-          <Text className="text-start mt-3 font-psemibold text-gray-100">
+          <Text className="font-psemibold mt-3 text-start text-neutral-500">
             Already have an account? {"   "}
             {/* <Pressable> */}
-            <Link className="text-sm italic" href={"/(auth)/login"}>
+            <Link className="italic text-sm" href={"/(auth)/login"}>
               {" "}
-              <MonoText className="text-gray-300">login</MonoText>{" "}
+              <MonoText className="text-neutral-300">login</MonoText>{" "}
             </Link>
             {/* </Pressable> */}
           </Text>
