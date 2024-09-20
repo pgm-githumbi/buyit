@@ -7,7 +7,12 @@ import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import { Text, View } from "@/components/Themed";
-import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  FontAwesome5,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 
@@ -28,20 +33,33 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Coins",
+          title: "Tokens",
+          // headerTransparent: true,
           tabBarIcon: ({ color, focused }) => (
             <AntDesign name="home" color={color} size={20} />
           ),
           headerShown: true,
-          headerStyle: { borderBottomColor: "green" },
+          headerStyle: { borderBottomColor: "dimgray", borderBottomWidth: 1 },
+          headerLeft(props) {
+            return (
+              <View className="-mr-2 ml-2">
+                <MaterialCommunityIcons
+                  name="hand-coin-outline"
+                  size={28}
+                  color={"yellow"}
+                />
+              </View>
+            );
+          },
           headerRight: () => (
             <Link href={"/search" as Href} asChild>
               <Pressable>
                 {({ pressed }) => (
-                  <FontAwesome5
-                    name="search"
+                  <AntDesign
+                    name="search1"
                     size={25}
-                    color={Colors[colorScheme ?? "light"].text}
+                    // color={Colors[colorScheme ?? "light"].text}
+                    color={"gray"}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
