@@ -18,7 +18,7 @@
 ## Demos
 #### Tokens page
 <p align="center">
-<img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/tokens-page.gif" width=256/>
+<img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/tokens-page.gif" width=256 height=560/>
 <!-- <img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/not-exist.gif" width=256 height=560/> -->
 <!-- <img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/coin-page-ethereum.gif" width=256 height=560/> -->
 </p>
