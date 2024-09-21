@@ -1,9 +1,9 @@
 # Cryptocurrency price tracking app with Expo react native
 <!-- ![home](https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/screen1_screenshot.png) -->
 <p align="center">
-<!-- <img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/screen1_screenshot.png" width=256/> -->
+<img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/screen1_screenshot.png" width=256/>
 <!-- <img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/not-exist.gif" width=256/> -->
-<!-- <img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/screen1_screenshot.png" width=256/> -->
+<img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/sign_up.png" width=256/>
 </p>
 
 ## Stack
@@ -17,7 +17,7 @@
 ## Demos
 #### Tokens page
 <p align="center">
-<img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/tokens-page.gif" width=330 height=490/>
+<img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/tokens-page.gif" width=256/>
 <!-- <img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/not-exist.gif" width=256 height=560/> -->
 <!-- <img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/coin-page-ethereum.gif" width=256 height=560/> -->
 </p>
