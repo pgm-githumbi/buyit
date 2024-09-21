@@ -4,6 +4,7 @@
 <img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/screen1_screenshot.png" width=256/>
 <!-- <img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/not-exist.gif" width=256/> -->
 <img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/sign_up.png" width=256/>
+<img src="https://github.com/pgm-githumbi/buyit/blob/main/assets/images/readme/tokens-page.png" width=256/>
 </p>
 
 ## Stack
