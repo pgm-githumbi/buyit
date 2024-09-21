@@ -14,9 +14,15 @@ import {
   IcoSearchResult,
   NftSearchResult,
   searchApi,
+  SearchApiErrorWrapper,
+  SearchApiLoadingWrapper,
   SearchResults,
 } from "@/redux/searchApi";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import {
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
 import CoinTitle from "@/components/features/search/searchBlocks/coin/CoinTitle";
 import CoinContent from "@/components/features/search/searchBlocks/coin/CoinContent";
 import ExchangeTitle from "@/components/features/search/searchBlocks/exchange/ExchangeTitle";
@@ -162,31 +168,50 @@ const Search = () => {
           <Text>No results meet the search criteria</Text>
         </View>
       )}
-      <ScrollView>
-        {result.isSuccess &&
-          reducedRenderData?.map((renderItem, groupIndex) =>
-            renderItem.data?.map((item, index) => (
-              <TouchableOpacity
-                onPress={
-                  //@ts-expect-error
-                  () => renderItem.handlePress(item)
-                }
-              >
-                <Card key={index} className="mb-2 mt-2">
-                  {
-                    //@ts-expect-error
-                    renderItem.title(item)
-                  }
 
-                  {
+      <SearchApiErrorWrapper
+        //@ts-expect-error
+        query={result}
+      >
+        <SearchApiLoadingWrapper
+          //@ts-expect-error
+          query={result}
+        >
+          {result.isSuccess && (
+            <FlatList
+              data={reducedRenderData
+                .map((renderItem) =>
+                  renderItem.data?.map((item, index) => ({
+                    renderItem,
+                    item,
+                    index,
+                  })),
+                )
+                .flat()}
+              renderItem={(info) => (
+                <TouchableOpacity
+                  onPress={
                     //@ts-expect-error
-                    renderItem.content(item)
+                    () => info.item.renderItem.handlePress(info.item?.item)
                   }
-                </Card>
-              </TouchableOpacity>
-            )),
+                >
+                  <Card key={info.index} className="mb-2 mt-2">
+                    {
+                      //@ts-expect-error
+                      info.item.renderItem.title(info.item?.item)
+                    }
+
+                    {
+                      //@ts-expect-error
+                      info.item.renderItem.content(info.item?.item)
+                    }
+                  </Card>
+                </TouchableOpacity>
+              )}
+            />
           )}
-      </ScrollView>
+        </SearchApiLoadingWrapper>
+      </SearchApiErrorWrapper>
     </View>
   );
 };

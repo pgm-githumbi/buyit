@@ -79,8 +79,8 @@ const styles = StyleSheet.create({
   box: { width: "90%", height: 35, marginVertical: 5 },
 });
 
-export const searchApiLoadingWrapper = loadingHoc<SearchResults, string>();
-export const searchApiErrorWrapper = errorHoc<SearchResults, string>();
+export const SearchApiLoadingWrapper = loadingHoc<SearchResults, string>();
+export const SearchApiErrorWrapper = errorHoc<SearchResults, string>();
 
 export type SearchApiResult =
   | {

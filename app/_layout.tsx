@@ -93,16 +93,7 @@ function RootLayoutNav() {
         <Stack.Screen
           name="search/index"
           options={{
-            // presentation: "modal",
-            headerSearchBarOptions: {
-              autoFocus: true,
-              onSearchButtonPress(e) {
-                console.log("search button pressed");
-              },
-            },
-            header(props) {
-              return <Text>Header blud</Text>;
-            },
+            headerShown: false,
           }}
         />
       </Stack>

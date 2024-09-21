@@ -30,7 +30,7 @@ export default function TabOneScreen() {
     " isFetching:",
     isFetching,
     " isLoading:",
-    isLoading
+    isLoading,
   );
   const market = useTotalMarketCapValue();
   console.log(
@@ -39,12 +39,12 @@ export default function TabOneScreen() {
     " isFetching:",
     market.isFetching,
     " isLoading:",
-    market.isLoading
+    market.isLoading,
   );
   return (
-    <SafeAreaView className="w-full items-center mt-2 justify-start">
+    <SafeAreaView className="mt-2 w-full items-center justify-start">
       <StatusBar style="auto" hidden />
-      <View className="flex w-64 hs-16 mr-4 p-3 border border-stone-700 mb-1 ml-1 self-start rounded-xl">
+      <View className="hs-16 mb-1 ml-1 mr-4 flex w-64 self-start rounded-xl border border-stone-700 p-3">
         {!market?.isLoading && (
           <>
             <MarketCapView market={market.data} />
@@ -74,7 +74,7 @@ export default function TabOneScreen() {
         )}
       </View>
       <CoinListLoading query={query}>
-        <View className="w-full mr-4 pr-4">
+        <View className="mr-4 w-full pr-4">
           <ScrollView horizontal>
             <DataTable>
               <DataTable.Header>
@@ -92,7 +92,7 @@ export default function TabOneScreen() {
                 <DataTable.Title numeric>Last 7days</DataTable.Title>
               </DataTable.Header>
               <FlatList
-                data={coins?.slice(0, 5)}
+                data={coins?.slice(0, 13)}
                 renderItem={({ item, index }) => (
                   <CoinListItem coin={item} key={index} />
                 )}
